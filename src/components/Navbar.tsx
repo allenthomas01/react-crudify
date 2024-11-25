@@ -57,8 +57,8 @@ export default function Navbar() {
   const location = useLocation();
 
   const isHomePage = location.pathname === "/admin/administrators";
-  const isCreatePage = location.pathname === "/createUser";
-  const isViewDetailsPage = location.pathname === "/viewDetails";
+  const isCreatePage = location.pathname === "/admin/create-user";
+  const isViewDetailsPage = location.pathname === "/admin/view-details";
 
   return (
     <Box sx={{ width: "100%", pt: 8 }}>
@@ -105,7 +105,7 @@ export default function Navbar() {
                 backgroundColor: "green",
                 border: "1px solid white",
               }}
-              onClick={() => navigate("/createUser")}
+              onClick={() => navigate("/admin/create-user")}
             >
               <AddIcon />
             </IconButton>

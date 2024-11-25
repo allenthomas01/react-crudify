@@ -145,7 +145,7 @@ export default function ShowAllUsers() {
   };
 
   const viewDetails = (row: Admin) => {
-    navigate("/viewDetails", { state: row });
+    navigate("/admin/view-details", { state: row });
   };
 
   React.useEffect(() => {

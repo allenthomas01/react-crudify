@@ -11,8 +11,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/admin/administrators" />} />
           <Route path="/admin/administrators" element={<HomePage />} />
-          <Route path="/createUser" element={<CreatePage />} />
-          <Route path="/viewDetails" element={<ViewPage />} />
+          <Route path="/admin/create-user" element={<CreatePage />} />
+          <Route path="/admin/view-details" element={<ViewPage />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>
