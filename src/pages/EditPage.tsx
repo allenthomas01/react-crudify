@@ -1,11 +1,13 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-const Edit = () => {
+import EditUser from '../components/EditUser'
+const EditPage = () => {
   return (
     <div>
       <Navbar/>
+      <EditUser/>
     </div>
   )
 }
 
-export default Edit
+export default EditPage

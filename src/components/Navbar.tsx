@@ -59,6 +59,7 @@ export default function Navbar() {
   const isHomePage = location.pathname === "/admin/administrators";
   const isCreatePage = location.pathname === "/admin/create-user";
   const isViewDetailsPage = location.pathname === "/admin/view-details";
+  // const isEditPage = location.pathname ==="/admin/"
 
   return (
     <Box sx={{ width: "100%", pt: 8 }}>

@@ -8,14 +8,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import { useLocation } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
+
 const ViewUserDetails = () => {
-    const location = useLocation();
-    const user = location.state;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = location.state;
+
+  const handleEditClick = () => {
+    navigate("/edit-user", { state: user });
+  };
+
   return (
-    <div>
-      <Box
+    <Box
       sx={{
-        width:"100vw",
+        width: "100vw",
         display: "flex",
         flexDirection: "row",
         flexWrap: "nowrap",
@@ -33,6 +40,7 @@ const ViewUserDetails = () => {
             color: "white",
             backgroundColor: "green",
           }}
+          onClick={handleEditClick}
         >
           <EditIcon />
         </IconButton>
@@ -65,8 +73,7 @@ const ViewUserDetails = () => {
         </CardContent>
       </Card>
     </Box>
-    </div>
-  )
-}
+  );
+};
 
-export default ViewUserDetails
+export default ViewUserDetails;

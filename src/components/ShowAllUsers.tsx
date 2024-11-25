@@ -95,7 +95,6 @@ export default function ShowAllUsers() {
         url: API_URL,
         headers: {
           Authorization: `Bearer ${TOKEN}`,
-          "Cache-Control": "no-cache",
         },
         params: {
           skip,
