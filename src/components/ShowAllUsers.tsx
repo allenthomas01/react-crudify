@@ -87,8 +87,6 @@ export default function ShowAllUsers() {
 
     const API_URL = import.meta.env.VITE_API_URL;
     const TOKEN = import.meta.env.VITE_TOKEN;
-    // const API_URL="https://wvvygmu6yk.execute-api.ap-southeast-1.amazonaws.com/prod/admin/administrators";
-    // const TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmNzc1YTlhLTFlNDktNDdiMy05MmQ0LWViNTYyNzlhMjNiMSIsInVzZXJUeXBlIjoiU3VwZXJBZG1pbiIsImlhdCI6MTczMjUyMDk5MCwiZXhwIjoxNzMyNTM4OTkwfQ.ezEnlZ_IBFD-1rmanmcNTPangZNmF5k3FnTsp-A7E8s";
     
 
     try {
