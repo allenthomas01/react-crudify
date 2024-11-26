@@ -10,12 +10,12 @@ import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
+import axios from "axios";
 
 interface Column {
   id: "id" | "name" | "email" | "phone" | "action";
@@ -43,7 +43,7 @@ const columns: readonly Column[] = [
 ];
 
 interface Admin {
-  id:number,
+  id: number;
   userID: number;
   fullName: string;
   email: string;
@@ -88,7 +88,6 @@ export default function ShowAllUsers() {
 
     const API_URL = import.meta.env.VITE_API_URL;
     const TOKEN = import.meta.env.VITE_TOKEN;
-    
 
     try {
       const response = await axios({
@@ -104,17 +103,14 @@ export default function ShowAllUsers() {
           sortOrder: "ASC",
         },
       });
-      //
-      console.log("API Response:", response.data);
 
       const { items, totalItems } = response.data;
 
       const filteredItems = items.filter(
         (admin: Admin) => !deletedRecords.has(admin.userID)
       );
-   
+      console.log(deletedRecords);
 
-  
       setRows(filteredItems);
       setTotalItems(totalItems - deletedRecords.size);
     } catch (error) {
@@ -122,12 +118,19 @@ export default function ShowAllUsers() {
     }
   };
 
+  const handleDialogOpen = (userID: number) => {
+    setRecordToDelete(userID);
+    setOpenDialog(true);
+  };
+
   const handleDelete = () => {
     if (recordToDelete !== null) {
       setDeletedRecords((prev) => new Set(prev.add(recordToDelete)));
+
       setRows((prevRows) =>
         prevRows.filter((row) => row.userID !== recordToDelete)
       );
+
       setTotalItems((prevTotal) => prevTotal - 1);
     }
     setOpenDialog(false);
@@ -137,13 +140,8 @@ export default function ShowAllUsers() {
     setOpenDialog(false);
   };
 
-  const handleDialogOpen = (userID: number) => {
-    setRecordToDelete(userID);
-    setOpenDialog(true);
-  };
-
   const viewDetails = (row: Admin) => {
-    navigate(`/admin/${row.id}`, { state: {row,id:row.id} });
+    navigate(`/admin/${row.id}`, { state: { row, id: row.id } });
   };
 
   React.useEffect(() => {
@@ -196,6 +194,7 @@ export default function ShowAllUsers() {
           </TableBody>
         </Table>
       </TableContainer>
+
       <TablePagination
         rowsPerPageOptions={[5, 10, 20]}
         component="div"

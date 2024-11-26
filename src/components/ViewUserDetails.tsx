@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 interface User {
   id: string;
   userID: string;
@@ -46,12 +47,14 @@ const ViewUserDetails: React.FC = () => {
 
   const handleEditClick = () => {
     if (user) {
-      navigate("/edit-user", { state: user });
+      navigate(`/admin/${id}/edit-user`, { state: user });
     }
   };
 
   if (!user) {
-    return null;
+    return <div>
+      <p>User not found </p>
+    </div>
   }
 
   return (
