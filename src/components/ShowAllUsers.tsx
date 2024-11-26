@@ -43,6 +43,7 @@ const columns: readonly Column[] = [
 ];
 
 interface Admin {
+  id:number,
   userID: number;
   fullName: string;
   email: string;
@@ -142,7 +143,7 @@ export default function ShowAllUsers() {
   };
 
   const viewDetails = (row: Admin) => {
-    navigate("/admin/view-details", { state: row });
+    navigate(`/admin/${row.id}`, { state: {row,id:row.id} });
   };
 
   React.useEffect(() => {

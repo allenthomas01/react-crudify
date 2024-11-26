@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import EditUser from '../components/EditUser'
-const EditPage = () => {
+const Edit = () => {
   return (
     <div>
       <Navbar/>
@@ -10,4 +10,4 @@ const EditPage = () => {
   )
 }
 
-export default EditPage
+export default Edit
