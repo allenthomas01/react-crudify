@@ -7,21 +7,71 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import axios from "axios";
+
+interface User {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: string;
+  gender: string;
+}
+
+const API_URL = import.meta.env.VITE_API_URL;
+const TOKEN = import.meta.env.VITE_API_TOKEN;
+console.log(API_URL)
 
 const CreateUser: React.FC = () => {
-  const [role, setRole] = React.useState("");
-  const [gender, setGender] = React.useState("");
+  const [userData, setUserData] = React.useState<User>({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    role: "",
+    gender: "",
+  });
 
-  const handleSave = () => {
-    alert("data saved successfully");
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setUserData({ ...userData, [name]: value });
   };
 
-  const handleRoleChange = (event: SelectChangeEvent) => {
-    setRole(event.target.value as string);
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setUserData({ ...userData, [name]: value });
   };
 
-  const handleGenderChange = (event: SelectChangeEvent) => {
-    setGender(event.target.value as string);
+  const handleSave = async () => {
+    try {
+      const response = await axios({
+        method: "post",
+        url: API_URL,
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        data: userData, 
+      });
+
+      alert("User data created successfully");
+      console.log(response.data);
+
+      
+      setUserData({
+        fullName: "",
+        email: "",
+        phone: "",
+        password: "",
+        role: "",
+        gender: "",
+      });
+    } catch (error) {
+      console.error("Could not save:", error);
+      alert("Failed to save user data. Please try again.");
+    }
   };
 
   return (
@@ -38,7 +88,14 @@ const CreateUser: React.FC = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <TextField fullWidth label="Full Name" name="name" required />
+          <TextField
+            fullWidth
+            label="Full Name"
+            name="fullName" 
+            value={userData.fullName}
+            onChange={handleInputChange}
+            required
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -46,6 +103,8 @@ const CreateUser: React.FC = () => {
             label="Email"
             name="email"
             type="email"
+            value={userData.email}
+            onChange={handleInputChange}
             required
           />
         </Grid>
@@ -54,7 +113,9 @@ const CreateUser: React.FC = () => {
             fullWidth
             label="Phone"
             name="phone"
-            type="phone"
+            type="tel" 
+            value={userData.phone}
+            onChange={handleInputChange}
             required
           />
         </Grid>
@@ -64,6 +125,8 @@ const CreateUser: React.FC = () => {
             label="Password"
             name="password"
             type="password"
+            value={userData.password}
+            onChange={handleInputChange}
             required
           />
         </Grid>
@@ -73,9 +136,9 @@ const CreateUser: React.FC = () => {
             <Select
               labelId="role-label"
               id="role-select"
-              value={role}
-              label="Role"
-              onChange={handleRoleChange}
+              name="role" 
+              value={userData.role}
+              onChange={handleSelectChange} 
             >
               <MenuItem value={"admin"}>Admin</MenuItem>
               <MenuItem value={"editor"}>Editor</MenuItem>
@@ -89,9 +152,9 @@ const CreateUser: React.FC = () => {
             <Select
               labelId="gender-label"
               id="gender-select"
-              value={gender}
-              label="Gender"
-              onChange={handleGenderChange}
+              name="gender" 
+              value={userData.gender}
+              onChange={handleSelectChange}
             >
               <MenuItem value={"male"}>Male</MenuItem>
               <MenuItem value={"female"}>Female</MenuItem>
