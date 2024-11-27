@@ -56,12 +56,9 @@ export default function ShowAllUsers() {
   const [rows, setRows] = React.useState<Admin[]>([]);
   const [totalItems, setTotalItems] = React.useState(0);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [recordToDelete, setRecordToDelete] = React.useState<number | null>(
-    null
-  );
-  const [deletedRecords, setDeletedRecords] = React.useState<Set<number>>(
-    new Set()
-  );
+  const [recordToDelete, setRecordToDelete] = React.useState<number | null>(null);
+  const [deletedRecords, setDeletedRecords] = React.useState<Set<number>>(new Set());
+  // const [isTesting, setIsTesting] = React.useState(true); // Add state to toggle between APIs
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -70,52 +67,64 @@ export default function ShowAllUsers() {
     fetchAdministrators(newPage, rowsPerPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRowsPerPage = +event.target.value;
     setRowsPerPage(newRowsPerPage);
     setPage(0);
     fetchAdministrators(0, newRowsPerPage);
   };
 
-  const fetchAdministrators = async (
-    currentPage: number,
-    rowsPerPage: number
-  ) => {
+  // Helper function to fetch data from the appropriate API
+  const fetchData = async (currentPage: number, rowsPerPage: number) => {
     const skip = currentPage * rowsPerPage;
     const take = rowsPerPage;
 
     const API_URL = import.meta.env.VITE_API_URL;
     const TOKEN = import.meta.env.VITE_TOKEN;
 
+    const DEV_API = import.meta.env.VITE_DEV_API;
+    const isTesting =true;
     try {
-      const response = await axios({
-        method: "get",
-        url: API_URL,
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-        params: {
-          skip,
-          take,
-          sortBy: "id",
-          sortOrder: "ASC",
-        },
-      });
+      if (isTesting) {
+        // Use DEV_API for testing
+        const response = await axios({
+          method: "get",
+          url: DEV_API,
+        });
+        setRows(response.data.items); // assuming the response has a 'items' field
+        setTotalItems(response.data.totalItems); // assuming the response has a 'totalItems' field
+      } else {
+        // Use the original API
+        const response = await axios({
+          method: "get",
+          url: API_URL,
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+          params: {
+            skip,
+            take,
+            sortBy: "id",
+            sortOrder: "ASC",
+          },
+        });
 
-      const { items, totalItems } = response.data;
+        const { items, totalItems } = response.data;
 
-      const filteredItems = items.filter(
-        (admin: Admin) => !deletedRecords.has(admin.userID)
-      );
-      console.log(deletedRecords);
+        const filteredItems = items.filter(
+          (admin: Admin) => !deletedRecords.has(admin.userID)
+        );
 
-      setRows(filteredItems);
-      setTotalItems(totalItems - deletedRecords.size);
+        setRows(filteredItems);
+        setTotalItems(totalItems - deletedRecords.size);
+      }
     } catch (error) {
       console.log("Error fetching administrators:", error);
     }
+  };
+
+  const fetchAdministrators = (currentPage: number, rowsPerPage: number) => {
+    fetchData(currentPage, rowsPerPage);
   };
 
   const handleDialogOpen = (userID: number) => {
@@ -126,11 +135,9 @@ export default function ShowAllUsers() {
   const handleDelete = () => {
     if (recordToDelete !== null) {
       setDeletedRecords((prev) => new Set(prev.add(recordToDelete)));
-
       setRows((prevRows) =>
         prevRows.filter((row) => row.userID !== recordToDelete)
       );
-
       setTotalItems((prevTotal) => prevTotal - 1);
     }
     setOpenDialog(false);
@@ -148,7 +155,7 @@ export default function ShowAllUsers() {
     if (location.pathname === "/admin/administrators") {
       fetchAdministrators(page, rowsPerPage);
     }
-  }, [location.pathname, page, rowsPerPage]);
+  }, [location.pathname, page, rowsPerPage]); // Depend on `isTesting`
 
   return (
     <Paper sx={{ width: "100vw", overflow: "hidden", padding: 0 }}>
@@ -207,9 +214,7 @@ export default function ShowAllUsers() {
 
       <Dialog open={openDialog} onClose={handleCancel}>
         <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete this record?
-        </DialogContent>
+        <DialogContent>Are you sure you want to delete this record?</DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} color="primary">
             Cancel

@@ -1,0 +1,274 @@
+{
+  "administrators": [
+    {
+      "id": 1,
+      "userID": 1,
+      "fullName": "John Doe",
+      "email": "john.doe@example.com",
+      "phone": "1234567890",
+      "role": "admin",
+      "gender": "male"
+    },
+    {
+      "id": 2,
+      "userID": 2,
+      "fullName": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "phone": "0987654321",
+      "role": "editor",
+      "gender": "female"
+    },
+    {
+      "id": 3,
+      "userID": 3,
+      "fullName": "Alice Johnson",
+      "email": "alice.johnson@example.com",
+      "phone": "1122334455",
+      "role": "viewer",
+      "gender": "female"
+    },
+    {
+      "id": 4,
+      "userID": 4,
+      "fullName": "Bob Brown",
+      "email": "bob.brown@example.com",
+      "phone": "5566778899",
+      "role": "admin",
+      "gender": "male"
+    },
+    {
+      "id": 5,
+      "userID": 5,
+      "fullName": "Charlie White",
+      "email": "charlie.white@example.com",
+      "phone": "6677889900",
+      "role": "editor",
+      "gender": "male"
+    },
+    {
+      "id": 6,
+      "userID": 6,
+      "fullName": "David Green",
+      "email": "david.green@example.com",
+      "phone": "7788991122",
+      "role": "viewer",
+      "gender": "male"
+    },
+    {
+      "id": 7,
+      "userID": 7,
+      "fullName": "Eva Black",
+      "email": "eva.black@example.com",
+      "phone": "8899002233",
+      "role": "editor",
+      "gender": "female"
+    },
+    {
+      "id": 8,
+      "userID": 8,
+      "fullName": "Frank Blue",
+      "email": "frank.blue@example.com",
+      "phone": "9900113344",
+      "role": "admin",
+      "gender": "male"
+    },
+    {
+      "id": 9,
+      "userID": 9,
+      "fullName": "Grace Red",
+      "email": "grace.red@example.com",
+      "phone": "1012345678",
+      "role": "viewer",
+      "gender": "female"
+    },
+    {
+      "id": 10,
+      "userID": 10,
+      "fullName": "Hank Pink",
+      "email": "hank.pink@example.com",
+      "phone": "1213456789",
+      "role": "admin",
+      "gender": "male"
+    },
+    {
+      "id": 11,
+      "userID": 11,
+      "fullName": "Ivy Orange",
+      "email": "ivy.orange@example.com",
+      "phone": "1314567890",
+      "role": "editor",
+      "gender": "female"
+    },
+    {
+      "id": 12,
+      "userID": 12,
+      "fullName": "Jack Purple",
+      "email": "jack.purple@example.com",
+      "phone": "1415678901",
+      "role": "viewer",
+      "gender": "male"
+    },
+    {
+      "id": 13,
+      "userID": 13,
+      "fullName": "Lily Grey",
+      "email": "lily.grey@example.com",
+      "phone": "1516789012",
+      "role": "editor",
+      "gender": "female"
+    },
+    {
+      "id": 14,
+      "userID": 14,
+      "fullName": "Mason Yellow",
+      "email": "mason.yellow@example.com",
+      "phone": "1617890123",
+      "role": "admin",
+      "gender": "male"
+    },
+    {
+      "id": 15,
+      "userID": 15,
+      "fullName": "Nina Cyan",
+      "email": "nina.cyan@example.com",
+      "phone": "1718901234",
+      "role": "viewer",
+      "gender": "female"
+    },
+    {
+      "id": 16,
+      "userID": 16,
+      "fullName": "Oscar Brown",
+      "email": "oscar.brown@example.com",
+      "phone": "1819012345",
+      "role": "admin",
+      "gender": "male"
+    },
+    {
+      "id": 17,
+      "userID": 17,
+      "fullName": "Paula White",
+      "email": "paula.white@example.com",
+      "phone": "1920123456",
+      "role": "editor",
+      "gender": "female"
+    },
+    {
+      "id": 18,
+      "userID": 18,
+      "fullName": "Quincy Gold",
+      "email": "quincy.gold@example.com",
+      "phone": "2021234567",
+      "role": "viewer",
+      "gender": "male"
+    },
+    {
+      "id": 19,
+      "userID": 19,
+      "fullName": "Rita Silver",
+      "email": "rita.silver@example.com",
+      "phone": "2122345678",
+      "role": "admin",
+      "gender": "female"
+    },
+    {
+      "id": 20,
+      "userID": 20,
+      "fullName": "Steve Copper",
+      "email": "steve.copper@example.com",
+      "phone": "2223456789",
+      "role": "editor",
+      "gender": "male"
+    },
+    {
+      "id": 21,
+      "userID": 21,
+      "fullName": "Tracy Zinc",
+      "email": "tracy.zinc@example.com",
+      "phone": "2324567890",
+      "role": "viewer",
+      "gender": "female"
+    },
+    {
+      "id": 22,
+      "userID": 22,
+      "fullName": "Ursula Lead",
+      "email": "ursula.lead@example.com",
+      "phone": "2425678901",
+      "role": "admin",
+      "gender": "female"
+    },
+    {
+      "id": 23,
+      "userID": 23,
+      "fullName": "Vince Tin",
+      "email": "vince.tin@example.com",
+      "phone": "2526789012",
+      "role": "editor",
+      "gender": "male"
+    },
+    {
+      "id": 24,
+      "userID": 24,
+      "fullName": "Wendy Steel",
+      "email": "wendy.steel@example.com",
+      "phone": "2627890123",
+      "role": "viewer",
+      "gender": "female"
+    },
+    {
+      "id": 25,
+      "userID": 25,
+      "fullName": "Xander Iron",
+      "email": "xander.iron@example.com",
+      "phone": "2728901234",
+      "role": "admin",
+      "gender": "male"
+    },
+    {
+      "id": 26,
+      "userID": 26,
+      "fullName": "Yara Platinum",
+      "email": "yara.platinum@example.com",
+      "phone": "2829012345",
+      "role": "editor",
+      "gender": "female"
+    },
+    {
+      "id": 27,
+      "userID": 27,
+      "fullName": "Zane Palladium",
+      "email": "zane.palladium@example.com",
+      "phone": "2920123456",
+      "role": "viewer",
+      "gender": "male"
+    },
+    {
+      "id": 28,
+      "userID": 28,
+      "fullName": "Amber Bismuth",
+      "email": "amber.bismuth@example.com",
+      "phone": "3021234567",
+      "role": "admin",
+      "gender": "female"
+    },
+    {
+      "id": 29,
+      "userID": 29,
+      "fullName": "Brian Antimony",
+      "email": "brian.antimony@example.com",
+      "phone": "3122345678",
+      "role": "editor",
+      "gender": "male"
+    },
+    {
+      "id": 30,
+      "userID": 30,
+      "fullName": "Clara Arsenic",
+      "email": "clara.arsenic@example.com",
+      "phone": "3223456789",
+      "role": "viewer",
+      "gender": "female"
+    }
+  ]
+}
