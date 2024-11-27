@@ -56,9 +56,12 @@ export default function ShowAllUsers() {
   const [rows, setRows] = React.useState<Admin[]>([]);
   const [totalItems, setTotalItems] = React.useState(0);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [recordToDelete, setRecordToDelete] = React.useState<number | null>(null);
-  const [deletedRecords, setDeletedRecords] = React.useState<Set<number>>(new Set());
-  // const [isTesting, setIsTesting] = React.useState(true); // Add state to toggle between APIs
+  const [recordToDelete, setRecordToDelete] = React.useState<number | null>(
+    null
+  );
+  const [deletedRecords, setDeletedRecords] = React.useState<Set<number>>(
+    new Set()
+  );
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -67,14 +70,15 @@ export default function ShowAllUsers() {
     fetchAdministrators(newPage, rowsPerPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newRowsPerPage = +event.target.value;
     setRowsPerPage(newRowsPerPage);
     setPage(0);
     fetchAdministrators(0, newRowsPerPage);
   };
 
-  // Helper function to fetch data from the appropriate API
   const fetchData = async (currentPage: number, rowsPerPage: number) => {
     const skip = currentPage * rowsPerPage;
     const take = rowsPerPage;
@@ -82,8 +86,14 @@ export default function ShowAllUsers() {
     const API_URL = import.meta.env.VITE_API_URL;
     const TOKEN = import.meta.env.VITE_TOKEN;
 
+    // TESTING ALTERNATIVE API
     const DEV_API = import.meta.env.VITE_DEV_API;
-    const isTesting =true;
+
+    // Set a constant to toggle between the testing and original API
+    const isTesting = true;
+
+    //END
+
     try {
       if (isTesting) {
         // Use DEV_API for testing
@@ -91,8 +101,14 @@ export default function ShowAllUsers() {
           method: "get",
           url: DEV_API,
         });
-        setRows(response.data.items); // assuming the response has a 'items' field
-        setTotalItems(response.data.totalItems); // assuming the response has a 'totalItems' field
+
+        const filteredItems = response.data.filter(
+          (admin: Admin) => !deletedRecords.has(admin.userID)
+        );
+
+        setRows(filteredItems);
+
+        setTotalItems(30 - deletedRecords.size);
       } else {
         // Use the original API
         const response = await axios({
@@ -148,14 +164,14 @@ export default function ShowAllUsers() {
   };
 
   const viewDetails = (row: Admin) => {
-    navigate(`/admin/${row.id}`, { state: { row, id: row.id } });
+    navigate(`/admin/${row.id}`, { state: { row, id: row.id} });
   };
 
   React.useEffect(() => {
     if (location.pathname === "/admin/administrators") {
       fetchAdministrators(page, rowsPerPage);
     }
-  }, [location.pathname, page, rowsPerPage]); // Depend on `isTesting`
+  }, [location.pathname, page, rowsPerPage]); 
 
   return (
     <Paper sx={{ width: "100vw", overflow: "hidden", padding: 0 }}>
@@ -214,7 +230,9 @@ export default function ShowAllUsers() {
 
       <Dialog open={openDialog} onClose={handleCancel}>
         <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>Are you sure you want to delete this record?</DialogContent>
+        <DialogContent>
+          Are you sure you want to delete this record?
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} color="primary">
             Cancel
