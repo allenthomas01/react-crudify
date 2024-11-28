@@ -16,25 +16,16 @@ const EditUser: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [formData, setFormData] = useState<User>({
-    fullName: "",
-    email: "",
-    phone: "",
-    password: "",
-    role: "",
-    gender: "",
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<User | null>(null); // Set null initially
+  const [isLoading, setIsLoading] = useState(true); // Start with loading as true
   const [error, setError] = useState<string | null>(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
-  const TOKEN = import.meta.env.VITE_API_TOKEN; // Fix the token variable
+  const TOKEN = import.meta.env.VITE_TOKEN;
 
   // Fetch user details for editing
   const fetchData = async () => {
     try {
-      setIsLoading(true);
       const response = await axios.get(`${API_URL}/${id}`, {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
@@ -42,13 +33,14 @@ const EditUser: React.FC = () => {
       });
 
       const user = response.data;
+
       setFormData({
-        fullName: user.fullName,
-        email: user.email,
-        phone: user.phone,
-        password: user.password,
-        role: user.role,
-        gender: user.gender,
+        fullName: user.fullName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        password: user.password || "",
+        role: user.role || "",
+        gender: user.gender || "",
       });
     } catch (err) {
       setError("Failed to fetch user data. Please try again.");
@@ -61,7 +53,7 @@ const EditUser: React.FC = () => {
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
   // Submit updated user details
@@ -69,7 +61,7 @@ const EditUser: React.FC = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const response = await axios.put(
+      await axios.put(
         `${API_URL}/user/${id}`,
         { ...formData },
         {
@@ -79,7 +71,6 @@ const EditUser: React.FC = () => {
         }
       );
 
-      console.log("User updated successfully:", response.data);
       navigate("/", { state: { message: "User updated successfully" } });
     } catch (err) {
       setError("Failed to update user data. Please try again.");
@@ -99,6 +90,10 @@ const EditUser: React.FC = () => {
 
   if (error) {
     return <Typography color="error">{error}</Typography>;
+  }
+
+  if (!formData) {
+    return <Typography>Error: No user data available.</Typography>;
   }
 
   return (

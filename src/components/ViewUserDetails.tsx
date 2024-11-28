@@ -9,19 +9,18 @@ import IconButton from "@mui/material/IconButton";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
-// interface User {
-//   id: string;
-//   userID: string;
-//   name: string;
-//   email: string;
-//   phone: string;
-// }
+interface User {
+  id: string;
+  email: string;
+  phone: string;
+  admin: { name: string,gender:string };
+  userRole: { role: { id: string; name: string } }[];
+}
 
 const ViewUserDetails: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); 
-  const [user, setUser] = useState<any>(null);
+  const { id } = useParams();
+  const [user, setUser] = useState<User | null>(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
   const TOKEN = import.meta.env.VITE_TOKEN;
@@ -33,9 +32,9 @@ const ViewUserDetails: React.FC = () => {
         url: `${API_URL}/${id}`,
         headers: {
           Authorization: `Bearer ${TOKEN}`,
-        }
+        },
       });
-      console.log(response.data)
+      console.log(response.data);
       setUser(response.data.data); 
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -48,15 +47,21 @@ const ViewUserDetails: React.FC = () => {
 
   const handleEditClick = () => {
     if (user) {
-      navigate(`/user/${id}`, { state: user });
+      navigate(`/user/${id}/edit`, { state: user });
     }
   };
 
   if (!user) {
-    return <div>
-      <p>User not found </p>
-    </div>
+    return (
+      <div>
+        <p>User not found </p>
+      </div>
+    );
   }
+
+  
+  const roles =
+    user.userRole.map((roleInfo) => roleInfo.role.name).join(", ") || "N/A";
 
   return (
     <Box
@@ -102,7 +107,7 @@ const ViewUserDetails: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1">
-                <strong>Name:</strong> {user.admin.name|| "N/A"}
+                <strong>Name:</strong> {user.admin.name || "N/A"}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -113,6 +118,16 @@ const ViewUserDetails: React.FC = () => {
             <Grid item xs={12}>
               <Typography variant="subtitle1">
                 <strong>Phone:</strong> {user.phone || "N/A"}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">
+                <strong>Gender:</strong> {user.admin.gender || "N/A"}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">
+                <strong>Role:</strong> {roles}
               </Typography>
             </Grid>
           </Grid>

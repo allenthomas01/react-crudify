@@ -14,7 +14,7 @@ function App() {
           <Route path="/user" element={<Index />} />
           <Route path="/admin/create-user" element={<Create />} />
           <Route path="/user/:id" element={<Details />} />
-          <Route path="/user/:id/" element={<Edit />} />
+          <Route path="/user/:id/edit" element={<Edit />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>

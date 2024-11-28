@@ -1,35 +1,32 @@
 import React from "react";
 import { TextField, Grid, Typography, Box, Button } from "@mui/material";
-import {
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import { MenuItem, SelectChangeEvent } from "@mui/material"; 
 import axios from "axios";
 
 interface User {
-  fullName: string;
-  email: string;
-  phone: string;
-  password: string;
-  role: string;
+  name: string;
   gender: string;
+  roleID: string;
+  phone: string;
+  email: string;
+  userType: string;
+  password: string;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
-const TOKEN = import.meta.env.VITE_API_TOKEN;
-console.log(API_URL)
+const TOKEN = import.meta.env.VITE_TOKEN;
+
+console.log("token is", TOKEN);
 
 const CreateUser: React.FC = () => {
   const [userData, setUserData] = React.useState<User>({
-    fullName: "",
-    email: "",
-    phone: "",
-    password: "",
-    role: "",
+    name: "",
     gender: "",
+    phone: "",
+    email: "",
+    roleID: "",
+    userType: "",
+    password: "",
   });
 
   const handleInputChange = (
@@ -48,29 +45,30 @@ const CreateUser: React.FC = () => {
     try {
       const response = await axios({
         method: "post",
-        url: API_URL,
+        url: `${API_URL}`,
         headers: {
           Authorization: `Bearer ${TOKEN}`,
           "Content-Type": "application/json",
         },
-        data: userData, 
+        data: userData,
       });
 
-      alert("User data created successfully");
+      alert("User created successfully!");
       console.log(response.data);
 
-      
+      // Reset form 
       setUserData({
-        fullName: "",
-        email: "",
-        phone: "",
-        password: "",
-        role: "",
+        name: "",
         gender: "",
+        phone: "",
+        roleID: "adfsfdsf", // reset to default value
+        email: "",
+        userType: "admin",
+        password: "",
       });
     } catch (error) {
-      console.error("Could not save:", error);
-      alert("Failed to save user data. Please try again.");
+      console.error("Failed to create user:", error);
+      alert("Failed to create user. Please try again.");
     }
   };
 
@@ -91,8 +89,8 @@ const CreateUser: React.FC = () => {
           <TextField
             fullWidth
             label="Full Name"
-            name="fullName" 
-            value={userData.fullName}
+            name="name"
+            value={userData.name}
             onChange={handleInputChange}
             required
           />
@@ -113,7 +111,7 @@ const CreateUser: React.FC = () => {
             fullWidth
             label="Phone"
             name="phone"
-            type="tel" 
+            type="tel"
             value={userData.phone}
             onChange={handleInputChange}
             required
@@ -131,36 +129,34 @@ const CreateUser: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth required>
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              id="role-select"
-              name="role" 
-              value={userData.role}
-              onChange={handleSelectChange} 
-            >
-              <MenuItem value={"admin"}>Admin</MenuItem>
-              <MenuItem value={"editor"}>Editor</MenuItem>
-              <MenuItem value={"viewer"}>Viewer</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            fullWidth
+            label="Role"
+            name="roleID"
+            select
+            value={userData.roleID}
+            onChange={handleSelectChange}
+            required
+          >
+            <MenuItem value="8">Staff</MenuItem>
+            <MenuItem value="7">Manager</MenuItem>
+            <MenuItem value="4">Admin</MenuItem>
+          </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormControl fullWidth required>
-            <InputLabel id="gender-label">Gender</InputLabel>
-            <Select
-              labelId="gender-label"
-              id="gender-select"
-              name="gender" 
-              value={userData.gender}
-              onChange={handleSelectChange}
-            >
-              <MenuItem value={"male"}>Male</MenuItem>
-              <MenuItem value={"female"}>Female</MenuItem>
-              <MenuItem value={"other"}>Other</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            fullWidth
+            label="Gender"
+            name="gender"
+            select
+            value={userData.gender}
+            onChange={handleSelectChange}
+            required
+          >
+            <MenuItem value="Male">Male</MenuItem>
+            <MenuItem value="Female">Female</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
+          </TextField>
         </Grid>
       </Grid>
 

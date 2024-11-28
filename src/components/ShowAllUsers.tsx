@@ -18,14 +18,14 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 
 interface Column {
-  id: "id" | "name" | "email" | "phone" | "action";
+  id: "index" | "name" | "email" | "phone" | "action";
   label: string;
   minWidth?: number;
   align?: "right";
 }
 
 const columns: readonly Column[] = [
-  { id: "id", label: "Id", minWidth: 100 },
+  { id: "index", label: "Index", minWidth: 100 },
   { id: "name", label: "Name", minWidth: 170 },
   { id: "email", label: "Email", minWidth: 100 },
   {
@@ -56,12 +56,7 @@ export default function ShowAllUsers() {
   const [rows, setRows] = React.useState<Admin[]>([]);
   const [totalItems, setTotalItems] = React.useState(0);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [recordToDelete, setRecordToDelete] = React.useState<number | null>(
-    null
-  );
-  const [deletedRecords, setDeletedRecords] = React.useState<Set<number>>(
-    new Set()
-  );
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -102,9 +97,8 @@ export default function ShowAllUsers() {
       });
 
       const { items, totalItems } = response.data;
-      console.log(items)
+      console.log(response);
       const filteredItems = items
-        .filter((item: any) => !deletedRecords.has(item["admin.userID"]))
         .map((item: any) => ({
           id: item.id,
           userID: item["admin.userID"],
@@ -114,7 +108,7 @@ export default function ShowAllUsers() {
         }));
 
       setRows(filteredItems);
-      setTotalItems(totalItems - deletedRecords.size);
+      
     } catch (error) {
       console.error("Error fetching administrators:", error);
     }
@@ -125,18 +119,12 @@ export default function ShowAllUsers() {
   };
 
   const handleDialogOpen = (userID: number) => {
-    setRecordToDelete(userID);
+    
     setOpenDialog(true);
   };
 
   const handleDelete = () => {
-    if (recordToDelete !== null) {
-      setDeletedRecords((prev) => new Set(prev.add(recordToDelete)));
-      setRows((prevRows) =>
-        prevRows.filter((row) => row.userID !== recordToDelete)
-      );
-      setTotalItems((prevTotal) => prevTotal - 1);
-    }
+    
     setOpenDialog(false);
   };
 
@@ -173,9 +161,10 @@ export default function ShowAllUsers() {
           </TableHead>
 
           <TableBody>
-            {rows.map((row) => (
+            {rows.map((row, index) => (
               <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                <TableCell>{row.id}</TableCell>
+                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+
                 <TableCell
                   onClick={() => viewDetails(row)}
                   style={{ cursor: "pointer", color: "blue" }}
