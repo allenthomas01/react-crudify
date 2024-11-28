@@ -10,11 +10,11 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/admin/administrators" />} />
-          <Route path="/admin/administrators" element={<Index />} />
+          <Route path="/" element={<Navigate to="/user" />} />
+          <Route path="/user" element={<Index />} />
           <Route path="/admin/create-user" element={<Create />} />
-          <Route path="/admin/:id" element={<Details />} />
-          <Route path="/admin/:id/edit-user" element={<Edit />} />
+          <Route path="/user/:id" element={<Details />} />
+          <Route path="/user/:id/" element={<Edit />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>

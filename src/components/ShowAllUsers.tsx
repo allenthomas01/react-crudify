@@ -45,7 +45,7 @@ const columns: readonly Column[] = [
 interface Admin {
   id: number;
   userID: number;
-  fullName: string;
+  name: string;
   email: string;
   phone: string;
 }
@@ -86,56 +86,37 @@ export default function ShowAllUsers() {
     const API_URL = import.meta.env.VITE_API_URL;
     const TOKEN = import.meta.env.VITE_TOKEN;
 
-    // TESTING ALTERNATIVE API
-    const DEV_API = import.meta.env.VITE_DEV_API;
-
-    // Set a constant to toggle between the testing and original API
-    const isTesting = true;
-
-    //END
-
     try {
-      if (isTesting) {
-        // Use DEV_API for testing
-        const response = await axios({
-          method: "get",
-          url: DEV_API,
-        });
+      const response = await axios({
+        method: "get",
+        url: API_URL,
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+        params: {
+          skip,
+          take,
+          sortBy: "id",
+          sortOrder: "ASC",
+        },
+      });
 
-        const filteredItems = response.data.filter(
-          (admin: Admin) => !deletedRecords.has(admin.userID)
-        );
+      const { items, totalItems } = response.data;
+      console.log(items)
+      const filteredItems = items
+        .filter((item: any) => !deletedRecords.has(item["admin.userID"]))
+        .map((item: any) => ({
+          id: item.id,
+          userID: item["admin.userID"],
+          name: item["admin.name"],
+          email: item.email,
+          phone: item.phone,
+        }));
 
-        setRows(filteredItems);
-
-        setTotalItems(30 - deletedRecords.size);
-      } else {
-        // Use the original API
-        const response = await axios({
-          method: "get",
-          url: API_URL,
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-          },
-          params: {
-            skip,
-            take,
-            sortBy: "id",
-            sortOrder: "ASC",
-          },
-        });
-
-        const { items, totalItems } = response.data;
-
-        const filteredItems = items.filter(
-          (admin: Admin) => !deletedRecords.has(admin.userID)
-        );
-
-        setRows(filteredItems);
-        setTotalItems(totalItems - deletedRecords.size);
-      }
+      setRows(filteredItems);
+      setTotalItems(totalItems - deletedRecords.size);
     } catch (error) {
-      console.log("Error fetching administrators:", error);
+      console.error("Error fetching administrators:", error);
     }
   };
 
@@ -164,14 +145,14 @@ export default function ShowAllUsers() {
   };
 
   const viewDetails = (row: Admin) => {
-    navigate(`/admin/${row.id}`, { state: { row, id: row.id} });
+    navigate(`/user/${row.id}`, { state: { row, id: row.id } });
   };
 
   React.useEffect(() => {
-    if (location.pathname === "/admin/administrators") {
+    if (location.pathname === "/user") {
       fetchAdministrators(page, rowsPerPage);
     }
-  }, [location.pathname, page, rowsPerPage]); 
+  }, [location.pathname, page, rowsPerPage]);
 
   return (
     <Paper sx={{ width: "100vw", overflow: "hidden", padding: 0 }}>
@@ -193,13 +174,13 @@ export default function ShowAllUsers() {
 
           <TableBody>
             {rows.map((row) => (
-              <TableRow hover role="checkbox" tabIndex={-1} key={row.userID}>
-                <TableCell>{row.userID}</TableCell>
+              <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                <TableCell>{row.id}</TableCell>
                 <TableCell
                   onClick={() => viewDetails(row)}
                   style={{ cursor: "pointer", color: "blue" }}
                 >
-                  {row.fullName}
+                  {row.name}
                 </TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell align="right">{row.phone}</TableCell>

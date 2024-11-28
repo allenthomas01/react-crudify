@@ -56,9 +56,9 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isHomePage = location.pathname === "/admin/administrators";
+  const isHomePage = location.pathname === "/user";
   const isCreatePage = location.pathname === "/admin/create-user";
-  const isViewDetailsPage = location.pathname === "/admin/view-details";
+  const isViewDetailsPage = location.pathname === "/user/:id";
   // const isEditPage = location.pathname ==="/admin/"
 
   return (

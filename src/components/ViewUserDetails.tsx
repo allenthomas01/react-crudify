@@ -10,18 +10,18 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
-interface User {
-  id: string;
-  userID: string;
-  fullName: string;
-  email: string;
-  phone: string;
-}
+// interface User {
+//   id: string;
+//   userID: string;
+//   name: string;
+//   email: string;
+//   phone: string;
+// }
 
 const ViewUserDetails: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams(); 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any>(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
   const TOKEN = import.meta.env.VITE_TOKEN;
@@ -35,6 +35,7 @@ const ViewUserDetails: React.FC = () => {
           Authorization: `Bearer ${TOKEN}`,
         }
       });
+      console.log(response.data)
       setUser(response.data.data); 
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -47,7 +48,7 @@ const ViewUserDetails: React.FC = () => {
 
   const handleEditClick = () => {
     if (user) {
-      navigate(`/admin/${id}/edit-user`, { state: user });
+      navigate(`/user/${id}`, { state: user });
     }
   };
 
@@ -96,12 +97,12 @@ const ViewUserDetails: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="subtitle1">
-                <strong>ID:</strong> {user.userID || "N/A"}
+                <strong>ID:</strong> {user.id || "N/A"}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="subtitle1">
-                <strong>Name:</strong> {user.fullName || "N/A"}
+                <strong>Name:</strong> {user.admin.name|| "N/A"}
               </Typography>
             </Grid>
             <Grid item xs={12}>
