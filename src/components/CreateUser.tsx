@@ -61,7 +61,7 @@ const CreateUser: React.FC = () => {
         name: "",
         gender: "",
         phone: "",
-        roleID: "adfsfdsf", // reset to default value
+        roleID: "", // reset to default value
         email: "",
         userType: "admin",
         password: "",
