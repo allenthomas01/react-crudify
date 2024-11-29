@@ -10,7 +10,7 @@ interface User {
     name: string;
     gender: string;
   };
-  roleID: string; // Backend expects roleID directly
+  roleID: string; 
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -59,7 +59,7 @@ const CreateUser: React.FC = () => {
           email: userData.email,
           phone: userData.phone,
           password: userData.password,
-          name: userData.admin.name, // Flattened for the backend
+          name: userData.admin.name,
           gender: userData.admin.gender,
           roleID: userData.roleID,
         },

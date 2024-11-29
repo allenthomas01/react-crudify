@@ -124,12 +124,12 @@ export default function ShowAllUsers() {
     try {
       await axios({
         method: "delete",
-        url: `${API_URL}/${userID}`, // Correct API URL
+        url: `${API_URL}/${userID}`, 
         headers: {
           Authorization: `Bearer ${TOKEN}`,
         },
       });
-      // Refresh the data after deletion
+      
       fetchAdministrators(page, rowsPerPage);
     } catch (error) {
       console.error("Error in deleting data: ", error);

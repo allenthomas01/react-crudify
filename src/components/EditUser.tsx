@@ -38,7 +38,7 @@ const EditUser: React.FC = () => {
         },
       });
 
-      const user = response.data.data; // Access the "data" field from the response object
+      const user = response.data.data; 
 
       setFormData({
         email: user.email || "",
@@ -97,7 +97,7 @@ const EditUser: React.FC = () => {
               {
                 role: {
                   id: value,
-                  name: "", // Name is optional here since the backend identifies by ID
+                  name: "", 
                 },
               },
             ],
@@ -106,7 +106,7 @@ const EditUser: React.FC = () => {
     );
   };
 
-  // Submit updated user details
+  
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
