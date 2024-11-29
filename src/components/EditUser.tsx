@@ -16,14 +16,14 @@ const EditUser: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [formData, setFormData] = useState<User | null>(null); // Set null initially
-  const [isLoading, setIsLoading] = useState(true); // Start with loading as true
+  const [formData, setFormData] = useState<User | null>(null); 
+  const [isLoading, setIsLoading] = useState(true); 
   const [error, setError] = useState<string | null>(null);
 
   const API_URL = import.meta.env.VITE_API_URL;
   const TOKEN = import.meta.env.VITE_TOKEN;
 
-  // Fetch user details for editing
+  
   const fetchData = async () => {
     try {
       const response = await axios.get(`${API_URL}/${id}`, {
@@ -50,13 +50,13 @@ const EditUser: React.FC = () => {
     }
   };
 
-  // Handle input changes
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
-  // Submit updated user details
+  
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {

@@ -1,70 +1,86 @@
-import React from "react";
-import { TextField, Grid, Typography, Box, Button } from "@mui/material";
-import { MenuItem, SelectChangeEvent } from "@mui/material"; 
+import React, { useState } from "react";
+import { TextField, Grid, Typography, Box, Button, MenuItem } from "@mui/material";
 import axios from "axios";
 
 interface User {
-  name: string;
-  gender: string;
-  roleID: string;
-  phone: string;
   email: string;
-  userType: string;
+  phone: string;
   password: string;
+  admin: {
+    name: string;
+    gender: string;
+  };
+  roleID: string; // Backend expects roleID directly
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
 const TOKEN = import.meta.env.VITE_TOKEN;
 
-console.log("token is", TOKEN);
-
 const CreateUser: React.FC = () => {
-  const [userData, setUserData] = React.useState<User>({
-    name: "",
-    gender: "",
-    phone: "",
+  const [userData, setUserData] = useState<User>({
     email: "",
-    roleID: "",
-    userType: "",
+    phone: "",
     password: "",
+    admin: { name: "", gender: "" },
+    roleID: "",
   });
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUserData({ ...userData, [name]: value });
-  };
 
-  const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    const { name, value } = event.target;
-    setUserData({ ...userData, [name]: value });
+    if (name === "name" || name === "gender") {
+      setUserData((prev) => ({
+        ...prev,
+        admin: { ...prev.admin, [name]: value },
+      }));
+    } else {
+      setUserData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSave = async () => {
+    // Validate required fields
+    if (
+      !userData.email ||
+      !userData.phone ||
+      !userData.password ||
+      !userData.admin.name ||
+      !userData.admin.gender ||
+      !userData.roleID
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
     try {
-      const response = await axios({
-        method: "post",
-        url: `${API_URL}`,
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        `${API_URL}`,
+        {
+          email: userData.email,
+          phone: userData.phone,
+          password: userData.password,
+          name: userData.admin.name, // Flattened for the backend
+          gender: userData.admin.gender,
+          roleID: userData.roleID,
         },
-        data: userData,
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       alert("User created successfully!");
       console.log(response.data);
 
-      // Reset form 
+      // Reset form
       setUserData({
-        name: "",
-        gender: "",
-        phone: "",
-        roleID: "", // reset to default value
         email: "",
-        userType: "admin",
+        phone: "",
         password: "",
+        admin: { name: "", gender: "" },
+        roleID: "",
       });
     } catch (error) {
       console.error("Failed to create user:", error);
@@ -90,7 +106,7 @@ const CreateUser: React.FC = () => {
             fullWidth
             label="Full Name"
             name="name"
-            value={userData.name}
+            value={userData.admin.name}
             onChange={handleInputChange}
             required
           />
@@ -135,7 +151,7 @@ const CreateUser: React.FC = () => {
             name="roleID"
             select
             value={userData.roleID}
-            onChange={handleSelectChange}
+            onChange={handleInputChange}
             required
           >
             <MenuItem value="8">Staff</MenuItem>
@@ -149,8 +165,8 @@ const CreateUser: React.FC = () => {
             label="Gender"
             name="gender"
             select
-            value={userData.gender}
-            onChange={handleSelectChange}
+            value={userData.admin.gender}
+            onChange={handleInputChange}
             required
           >
             <MenuItem value="Male">Male</MenuItem>
