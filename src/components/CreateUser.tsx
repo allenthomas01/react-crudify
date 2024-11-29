@@ -1,127 +1,74 @@
 import React from "react";
-import { TextField, Grid, Typography, Box, Button, MenuItem } from "@mui/material";
+import { TextField, Grid, Typography, Box, Button } from "@mui/material";
+import { MenuItem, SelectChangeEvent } from "@mui/material"; 
 import axios from "axios";
 
 interface User {
-  id: string;
-  email: string;
+  name: string;
+  gender: string;
+  roleID: string;
   phone: string;
+  email: string;
+  userType: string;
   password: string;
-  admin: {
-    name: string;
-    gender: string;
-  };
-  userRole: {
-    role: {
-      id: string;
-      name: string;
-    };
-  }[];
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
 const TOKEN = import.meta.env.VITE_TOKEN;
 
+console.log("token is", TOKEN);
+
 const CreateUser: React.FC = () => {
   const [userData, setUserData] = React.useState<User>({
-    id: "",
-    email: "",
+    name: "",
+    gender: "",
     phone: "",
+    email: "",
+    roleID: "",
+    userType: "",
     password: "",
-    admin: {
-      name: "",
-      gender: "",
-    },
-    userRole: [
-      {
-        role: {
-          id: "",
-          name: "",
-        },
-      },
-    ],
   });
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
-
-    // Handle nested updates for `admin`
-    if (name === "name" || name === "gender") {
-      setUserData((prev) => ({
-        ...prev,
-        admin: {
-          ...prev.admin,
-          [name]: value,
-        },
-      }));
-    } else {
-      setUserData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setUserData({ ...userData, [name]: value });
   };
 
-  const handleRoleChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const { value } = event.target as { value: string };
-    setUserData((prev) => ({
-      ...prev,
-      userRole: [
-        {
-          role: {
-            id: value,
-            name: "", // Name can be set dynamically if needed
-          },
-        },
-      ],
-    }));
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setUserData({ ...userData, [name]: value });
   };
 
   const handleSave = async () => {
-    console.log("User data being sent:", userData);
-
-    const payload = {
-      admin: userData.admin,
-      email: userData.email,
-      phone: userData.phone,
-      password: userData.password,
-      userRole: userData.userRole,
-    };
-
     try {
-      const response = await axios.post(API_URL, payload, {
+      const response = await axios({
+        method: "post",
+        url: `${API_URL}`,
         headers: {
           Authorization: `Bearer ${TOKEN}`,
           "Content-Type": "application/json",
         },
+        data: userData,
       });
 
       alert("User created successfully!");
-      console.log("Response data:", response.data);
+      console.log(response.data);
 
+      // Reset form 
       setUserData({
-        id: "",
-        email: "",
+        name: "",
+        gender: "",
         phone: "",
+        roleID: "", // reset to default value
+        email: "",
+        userType: "admin",
         password: "",
-        admin: {
-          name: "",
-          gender: "",
-        },
-        userRole: [
-          {
-            role: {
-              id: "",
-              name: "",
-            },
-          },
-        ],
       });
     } catch (error) {
       console.error("Failed to create user:", error);
-      alert("Failed to create user. Please check your input and try again.");
+      alert("Failed to create user. Please try again.");
     }
   };
 
@@ -143,7 +90,7 @@ const CreateUser: React.FC = () => {
             fullWidth
             label="Full Name"
             name="name"
-            value={userData.admin.name}
+            value={userData.name}
             onChange={handleInputChange}
             required
           />
@@ -187,13 +134,13 @@ const CreateUser: React.FC = () => {
             label="Role"
             name="roleID"
             select
-            value={userData.userRole[0].role.id}
-            onChange={handleRoleChange}
+            value={userData.roleID}
+            onChange={handleSelectChange}
             required
           >
-            <MenuItem value="4">Reseller</MenuItem>
-            <MenuItem value="7">Manager</MenuItem>
             <MenuItem value="8">Staff</MenuItem>
+            <MenuItem value="7">Manager</MenuItem>
+            <MenuItem value="4">Admin</MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -202,8 +149,8 @@ const CreateUser: React.FC = () => {
             label="Gender"
             name="gender"
             select
-            value={userData.admin.gender}
-            onChange={handleInputChange}
+            value={userData.gender}
+            onChange={handleSelectChange}
             required
           >
             <MenuItem value="Male">Male</MenuItem>

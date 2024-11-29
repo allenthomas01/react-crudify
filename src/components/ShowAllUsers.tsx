@@ -50,16 +50,12 @@ interface Admin {
   phone: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL;
-const TOKEN = import.meta.env.VITE_TOKEN;
-
 export default function ShowAllUsers() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState<Admin[]>([]);
   const [totalItems, setTotalItems] = React.useState(0);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [userIDToDelete, setUserIDToDelete] = React.useState<number | null>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -69,7 +65,9 @@ export default function ShowAllUsers() {
     fetchAdministrators(newPage, rowsPerPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newRowsPerPage = +event.target.value;
     setRowsPerPage(newRowsPerPage);
     setPage(0);
@@ -79,6 +77,9 @@ export default function ShowAllUsers() {
   const fetchData = async (currentPage: number, rowsPerPage: number) => {
     const skip = currentPage * rowsPerPage;
     const take = rowsPerPage;
+
+    const API_URL = import.meta.env.VITE_API_URL;
+    const TOKEN = import.meta.env.VITE_TOKEN;
 
     try {
       const response = await axios({
@@ -96,16 +97,18 @@ export default function ShowAllUsers() {
       });
 
       const { items, totalItems } = response.data;
-      const filteredItems = items.map((item: any) => ({
-        id: item.id,
-        userID: item["admin.userID"],
-        name: item["admin.name"],
-        email: item.email,
-        phone: item.phone,
-      }));
+      console.log(response);
+      const filteredItems = items
+        .map((item: any) => ({
+          id: item.id,
+          userID: item["admin.userID"],
+          name: item["admin.name"],
+          email: item.email,
+          phone: item.phone,
+        }));
 
       setRows(filteredItems);
-      setTotalItems(totalItems); // Update total items for pagination
+      
     } catch (error) {
       console.error("Error fetching administrators:", error);
     }
@@ -116,31 +119,17 @@ export default function ShowAllUsers() {
   };
 
   const handleDialogOpen = (userID: number) => {
-    setUserIDToDelete(userID);
+    
     setOpenDialog(true);
   };
 
-  const handleDelete = async (userID: number) => {
-    try {
-      await axios({
-        method: "delete",
-        url: `${API_URL}/${userID}`, // Correct API URL
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      });
-      // Refresh the data after deletion
-      fetchAdministrators(page, rowsPerPage);
-    } catch (error) {
-      console.error("Error in deleting data: ", error);
-    }
-
+  const handleDelete = () => {
+    
     setOpenDialog(false);
   };
 
   const handleCancel = () => {
     setOpenDialog(false);
-    setUserIDToDelete(null);
   };
 
   const viewDetails = (row: Admin) => {
@@ -218,10 +207,7 @@ export default function ShowAllUsers() {
           <Button onClick={handleCancel} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={() => handleDelete(userIDToDelete!)}
-            color="secondary"
-          >
+          <Button onClick={handleDelete} color="secondary">
             OK
           </Button>
         </DialogActions>
