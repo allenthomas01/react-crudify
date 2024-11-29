@@ -57,7 +57,7 @@ export default function Navbar() {
   const location = useLocation();
 
   const isHomePage = location.pathname === "/user";
-  const isCreatePage = location.pathname === "/admin/create-user";
+  const isCreatePage = location.pathname === "/user/create-user";
   const isViewDetailsPage = location.pathname === "/user/:id";
   // const isEditPage = location.pathname ==="/admin/"
 
@@ -106,7 +106,7 @@ export default function Navbar() {
                 backgroundColor: "green",
                 border: "1px solid white",
               }}
-              onClick={() => navigate("/admin/create-user")}
+              onClick={() => navigate("/user/create-user")}
             >
               <AddIcon />
             </IconButton>
