@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -120,27 +122,10 @@ export default function ShowAllUsers() {
     setOpenDialog(true);
   };
 
-  const handleDelete = async (userID: number) => {
-    try {
-      await axios({
-        method: "delete",
-        url: `${API_URL}/${userID}`, // Correct API URL
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      });
-      // Refresh the data after deletion
-      fetchAdministrators(page, rowsPerPage);
-    } catch (error) {
-      console.error("Error in deleting data: ", error);
-    }
-
-    setOpenDialog(false);
-  };
-
   const handleCancel = () => {
     setOpenDialog(false);
     setUserIDToDelete(null);
+    formik.resetForm();
   };
 
   const viewDetails = (row: Admin) => {
@@ -152,6 +137,35 @@ export default function ShowAllUsers() {
       fetchAdministrators(page, rowsPerPage);
     }
   }, [location.pathname, page, rowsPerPage]);
+
+  // Formik setup
+  const formik = useFormik({
+    initialValues: {
+      confirmDelete: false,
+    },
+    validationSchema: Yup.object({
+      confirmDelete: Yup.boolean()
+        .oneOf([true], "You must confirm to delete the user.")
+        .required("Confirmation is required."),
+    }),
+    onSubmit: async () => {
+      if (userIDToDelete !== null) {
+        try {
+          await axios({
+            method: "delete",
+            url: `${API_URL}/${userIDToDelete}`,
+            headers: {
+              Authorization: `Bearer ${TOKEN}`,
+            },
+          });
+          fetchAdministrators(page, rowsPerPage); // Refresh data
+        } catch (error) {
+          console.error("Error in deleting data: ", error);
+        }
+      }
+      setOpenDialog(false);
+    },
+  });
 
   return (
     <Paper sx={{ width: "100vw", overflow: "hidden", padding: 0 }}>
@@ -212,15 +226,29 @@ export default function ShowAllUsers() {
       <Dialog open={openDialog} onClose={handleCancel}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this record?
+          <form onSubmit={formik.handleSubmit}>
+            <label>
+              <input
+                type="checkbox"
+                name="confirmDelete"
+                checked={formik.values.confirmDelete}
+                onChange={formik.handleChange}
+              />
+              I confirm to delete this user
+            </label>
+            {formik.errors.confirmDelete && (
+              <p style={{ color: "red" }}>{formik.errors.confirmDelete}</p>
+            )}
+          </form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} color="primary">
             Cancel
           </Button>
           <Button
-            onClick={() => handleDelete(userIDToDelete!)}
+            onClick={formik.submitForm}
             color="secondary"
+            disabled={!formik.values.confirmDelete}
           >
             OK
           </Button>
