@@ -234,7 +234,7 @@ export default function ShowAllUsers() {
                 checked={formik.values.confirmDelete}
                 onChange={formik.handleChange}
               />
-              I confirm to delete this user
+              confirm to delete this user
             </label>
             {formik.errors.confirmDelete && (
               <p style={{ color: "red" }}>{formik.errors.confirmDelete}</p>

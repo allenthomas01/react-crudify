@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Grid, Typography, Box, Button, MenuItem } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import {Formik, Form } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 
 interface User {
@@ -22,13 +24,21 @@ const EditUser: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [formData, setFormData] = useState<User | null>(null);
+  // const [values, setFormData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const[initialValues,setInitialValues]=useState({
+    email:"",
+    phone:"",
+    admin:{name:"",gender:""},
+    userRole:[{role:{id:""}}],
+  });
 
   const API_URL = import.meta.env.VITE_API_URL;
   const TOKEN = import.meta.env.VITE_TOKEN;
 
+  useEffect(()=>{
   // Fetch user details
   const fetchData = async () => {
     try {
@@ -38,16 +48,16 @@ const EditUser: React.FC = () => {
         },
       });
 
-      const user = response.data.data; // Access the "data" field from the response object
+      const user = response.data.data; 
 
-      setFormData({
+      setInitialValues({
         email: user.email || "",
         phone: user.phone || "",
         admin: {
           name: user.admin?.name || "",
           gender: user.admin?.gender || "",
         },
-        userRole: user.userRole || [],
+        userRole: user.userRole || [{role:{id:""}}],
       });
     } catch (err) {
       setError("Failed to fetch user data. Please try again.");
@@ -57,69 +67,29 @@ const EditUser: React.FC = () => {
     }
   };
 
-  // Handle input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) =>
-      prev
-        ? {
-            ...prev,
-            [name]: value,
-          }
-        : null
-    );
-  };
+  if(id){
+    fetchData();
+  }
+},[id]);
 
-  // Handle nested admin field changes
-  const handleAdminChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) =>
-      prev
-        ? {
-            ...prev,
-            admin: {
-              ...prev.admin,
-              [name]: value,
-            },
-          }
-        : null
-    );
-  };
 
-  // Handle role selection
-  const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setFormData((prev) =>
-      prev
-        ? {
-            ...prev,
-            userRole: [
-              {
-                role: {
-                  id: value,
-                  name: "", // Name is optional here since the backend identifies by ID
-                },
-              },
-            ],
-          }
-        : null
-    );
-  };
+
+
 
   // Submit updated user details
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (values:typeof initialValues) => {
+  
     try {
       setIsLoading(true);
 
       const payload = {
-        email: formData?.email,
-        phone: formData?.phone,
+        email: values?.email,
+        phone: values?.phone,
         admin: {
-          name: formData?.admin.name,
-          gender: formData?.admin.gender,
+          name: values?.admin.name,
+          gender: values?.admin.gender,
         },
-        userRole: formData?.userRole.map((roleObj) => ({
+        userRole: values?.userRole.map((roleObj) => ({
           role: {
             id: roleObj.role.id,
           },
@@ -142,9 +112,7 @@ const EditUser: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (id) fetchData();
-  }, [id]);
+ 
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -154,9 +122,9 @@ const EditUser: React.FC = () => {
     return <Typography color="error">{error}</Typography>;
   }
 
-  if (!formData) {
-    return <Typography>Error: No user data available.</Typography>;
-  }
+  // if (!values) {
+  //   return <Typography>Error: No user data available.</Typography>;
+  // }
 
   return (
     <Box
@@ -166,7 +134,7 @@ const EditUser: React.FC = () => {
         px: "8rem",
         boxSizing: "border-box",
       }}
-      onSubmit={handleFormSubmit}
+      onSubmit={handleSubmit}
     >
       <Typography variant="h5" mb={2}>
         Edit User
@@ -177,7 +145,7 @@ const EditUser: React.FC = () => {
             fullWidth
             label="Full Name"
             name="name"
-            value={formData.admin.name}
+            value={values.admin.name}
             onChange={handleAdminChange}
             required
           />
@@ -189,7 +157,7 @@ const EditUser: React.FC = () => {
             label="Email"
             name="email"
             type="email"
-            value={formData.email}
+            value={values.email}
             onChange={handleInputChange}
             required
           />
@@ -201,7 +169,7 @@ const EditUser: React.FC = () => {
             label="Phone"
             name="phone"
             type="tel"
-            value={formData.phone}
+            value={values.phone}
             onChange={handleInputChange}
             required
           />
@@ -213,7 +181,7 @@ const EditUser: React.FC = () => {
             label="Gender"
             name="gender"
             select
-            value={formData.admin.gender}
+            value={values.admin.gender}
             onChange={handleAdminChange}
             required
           >
@@ -229,7 +197,7 @@ const EditUser: React.FC = () => {
             label="Role"
             name="role"
             select
-            value={formData.userRole[0]?.role.id || ""}
+            value={values.userRole[0]?.role.id || ""}
             onChange={handleRoleChange}
             required
           >
