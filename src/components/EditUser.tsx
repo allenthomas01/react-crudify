@@ -42,7 +42,7 @@ const EditUser: React.FC = () => {
   // Fetch user details
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/${id}`, {
+      const response = await axios.get(`${API_URL}/user/${id}`, {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
         },
@@ -96,7 +96,7 @@ const EditUser: React.FC = () => {
         })),
       };
 
-      await axios.put(`${API_URL}/${id}`, payload, {
+      await axios.put(`${API_URL}/user/${id}`, payload, {
         headers: {
           Authorization: `Bearer ${TOKEN}`,
           "Content-Type": "application/json",

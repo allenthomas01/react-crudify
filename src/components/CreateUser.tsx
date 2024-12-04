@@ -42,7 +42,7 @@ const CreateUser: React.FC = () => {
   ) => {
     try {
       const response = await axios.post(
-        `${API_URL}`,
+        `${API_URL}/user`,
         {
           email: values.email,
           phone: values.phone,

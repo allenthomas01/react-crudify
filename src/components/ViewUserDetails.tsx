@@ -29,7 +29,7 @@ const ViewUserDetails: React.FC = () => {
     try {
       const response = await axios({
         method: "get",
-        url: `${API_URL}/${id}`,
+        url: `${API_URL}/user/${id}`,
         headers: {
           Authorization: `Bearer ${TOKEN}`,
         },

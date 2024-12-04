@@ -85,7 +85,7 @@ export default function ShowAllUsers() {
     try {
       const response = await axios({
         method: "get",
-        url: API_URL,
+        url: `${API_URL}/user`,
         headers: {
           Authorization: `Bearer ${TOKEN}`,
         },
@@ -153,7 +153,7 @@ export default function ShowAllUsers() {
         try {
           await axios({
             method: "delete",
-            url: `${API_URL}/${userIDToDelete}`,
+            url: `${API_URL}/user/${userIDToDelete}`,
             headers: {
               Authorization: `Bearer ${TOKEN}`,
             },
