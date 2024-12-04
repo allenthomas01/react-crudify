@@ -28,7 +28,7 @@ const EditUser: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const[initialValues,setInitialValues]=useState({
+  const[initialValues,setInitialValues]=useState( {
     email:"",
     phone:"",
     admin:{name:"",gender:""},

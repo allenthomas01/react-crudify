@@ -14,6 +14,8 @@ import * as Yup from "yup";
 const API_URL = import.meta.env.VITE_API_URL;
 const TOKEN = import.meta.env.VITE_TOKEN;
 
+import { useNavigate } from "react-router-dom"; 
+
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Enter a valid email"),
   phone: Yup.string().matches(/^\d{10}$/, "Enter a valid phone number"),
@@ -28,6 +30,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateUser: React.FC = () => {
+  const navigate = useNavigate(); 
   const initialValues = {
     email: "",
     phone: "",
@@ -63,6 +66,8 @@ const CreateUser: React.FC = () => {
       console.log(response.data);
 
       resetForm();
+      navigate("/user");
+
     } catch (error) {
       console.error("Failed to create user:", error);
       alert("Failed to create user. Please try again.");
